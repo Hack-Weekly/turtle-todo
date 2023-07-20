@@ -1,18 +1,23 @@
-import "./globals.css"
+import "./globals.css";
+import { Inter } from "next/font/google";
 
 export const metadata = {
-  title: 'Turtle Todo',
-  description: 'Turtle Todo',
-}
+  title: "Turtle Todo",
+  description: "Turtle Todo",
+};
 
-export default function RootLayout({ children, }: { children: React.ReactNode }) {
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  weight: "variable",
+});
+
+export default function RootLayout({ children, }: { children: React.ReactNode; }) {
   return (
-    <html lang="en">
+    <html lang="en" className={inter.className}>
       <body>
-        <main>
-          {children}
-        </main>
+        <main>{children}</main>
       </body>
     </html>
-  )
+  );
 }
