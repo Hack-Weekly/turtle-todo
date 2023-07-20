@@ -1,6 +1,5 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
-
 export const metadata = {
   title: "Turtle Todo",
   description: "Turtle Todo",
@@ -12,7 +11,11 @@ const inter = Inter({
   weight: "variable",
 });
 
-export default function RootLayout({ children, }: { children: React.ReactNode; }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en" className={inter.className}>
       <body>
