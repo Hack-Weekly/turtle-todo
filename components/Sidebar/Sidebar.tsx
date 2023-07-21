@@ -1,6 +1,6 @@
 import { Plus } from "lucide-react";
 import { Button } from "../__shadcn/button";
-import Note from "@/components/note/note";
+import PrivateTodo from "@/components/PrivateTodo/private-todo";
 
 const checklist = [
   {
@@ -29,9 +29,9 @@ export default function Sidebar() {
         </Button>
       </div>
       <div className="flex flex-col gap-8">
-        <Note title="Next hour" checklist={checklist} />
-        <Note title="Today" checklist={checklist} />
-        <Note title="Tomorrow" checklist={checklist} />
+        <PrivateTodo title="Next hour" checklist={checklist} />
+        <PrivateTodo title="Today" checklist={checklist} />
+        <PrivateTodo title="Tomorrow" checklist={checklist} />
       </div>
     </section>
   );
