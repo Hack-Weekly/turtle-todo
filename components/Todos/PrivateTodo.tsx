@@ -16,7 +16,7 @@ type Props = {
   checklist?: Array<{ title: string; checked: boolean }>;
 };
 
-const Note = (props: Props) => {
+const PrivateTodo = (props: Props) => {
   return (
     <Card className="bg-[#151515] border-0 text-white">
       <CardHeader>
@@ -43,4 +43,5 @@ const Note = (props: Props) => {
     </Card>
   );
 };
-export default Note;
+
+export default PrivateTodo;

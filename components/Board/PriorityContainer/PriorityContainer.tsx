@@ -1,4 +1,4 @@
-import PublicTodo from "../PublicTodo";
+import PublicTodo from "../../PublicTodo";
 
 export default function PriorityContainer() {
     return (

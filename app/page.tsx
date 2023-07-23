@@ -1,6 +1,6 @@
-import Board from "@/components/Board/Board";
-import Navbar from "./../components/Navbar";
+import Navbar from "../components/Navbar/Navbar";
 import Sidebar from "./../components/Sidebar/Sidebar";
+import Board from "@/components/Board/Board";
 
 export default function page() {
   return (
