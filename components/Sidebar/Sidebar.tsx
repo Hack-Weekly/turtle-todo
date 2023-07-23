@@ -18,7 +18,7 @@ const checklist = [
 ];
 export default function Sidebar() {
   return (
-    <section className="h-screen w-[20rem] bg-[#000000] p-6">
+    <section className="w-[20rem] bg-[#000000] p-6 h-full">
       <h3 className="text-2xl font-semibold mt-6">Turtle Todos</h3>
       <div className="flex justify-between mt-10 mb-4">
         <h6 className="text-gray-500 text-lg font-medium my-auto">
