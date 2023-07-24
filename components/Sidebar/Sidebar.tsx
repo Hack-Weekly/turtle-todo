@@ -16,6 +16,7 @@ const checklist = [
     checked: false,
   },
 ];
+
 export default function Sidebar() {
   return (
     <section className="w-[20rem] bg-[#000000] p-6 h-full">
