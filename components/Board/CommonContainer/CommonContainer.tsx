@@ -19,14 +19,21 @@ export default function CommonContainer() {
       const { data } = await supabase_client.from("notes").select();
       setNotes(data);
     }
-
+    const data={
+        id: "1",
+        title: "title",
+        created_at: new Date().toISOString(),
+        priority: "high",
+        status: "done",
+    } satisfies NoteType;
     return (
         <div>
             <Categories />
             <div className="flex flex-wrap">
-                {notes?.map(v => {
+                {/* {notes?.map(v => {
                     return <PublicTodo key={v.id} {...v} />
-                })}
+                })} */}
+                 <PublicTodo  {...data} />
             </div>
         </div>
     )
