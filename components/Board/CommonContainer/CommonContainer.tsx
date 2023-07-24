@@ -9,16 +9,16 @@ import { Database } from "@/lib/db.types";
 type NoteType = Database["public"]["Tables"]["notes"]["Row"]
 
 export default function CommonContainer() {
-    const [notes, setNotes] = useState<NoteType[] | null>([]);
+    // const [notes, setNotes] = useState<NoteType[] | null>([]);
 
-    useEffect(() => {
-      getTodos();
-    }, []);
+    // useEffect(() => {
+    //   getTodos();
+    // }, []);
 
-    async function getTodos() {
-      const { data } = await supabase_client.from("notes").select();
-      setNotes(data);
-    }
+    // async function getTodos() {
+    //   const { data } = await supabase_client.from("notes").select();
+    //   setNotes(data);
+    // }
     const data={
         id: "1",
         title: "title",
