@@ -9,6 +9,7 @@ import { Combobox } from '@/components/__shadcn/combo-box';
 import { DatePicker } from '@/components/__shadcn/date-picker';
 import { supabase_client } from '@/db/supabase';
 import { v4 as uuidv4 } from 'uuid';
+import { toast } from 'react-hot-toast';
 
 
 const STATUS = [
@@ -68,6 +69,13 @@ export default function CreateNoteForm() {
 				start_date: startDate!.toUTCString(), 
 				due_date: dueDate!.toUTCString(), 
 				created_at: new Date().toUTCString() })
+
+		if(error) {
+			toast.error(error.message);
+			return;
+		}
+		
+		toast.success("Todo successfully added 🎉");
 	}
 
 	return (
