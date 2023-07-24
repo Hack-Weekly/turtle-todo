@@ -10,7 +10,7 @@ import PublicTodo from "@/components/Todos/PublicTodo";
 type TodoType = Database["public"]["Tables"]["todos"]["Row"]
 
 export default function CommonContainer() {
-    const [todos, setNotes] = useState<TodoType[] | null>([]);
+    const [todos, setTodos] = useState<TodoType[] | null>([]);
 
     useEffect(() => {
         getTodos();
@@ -18,7 +18,7 @@ export default function CommonContainer() {
 
     async function getTodos() {
         const { data } = await supabase_client.from("todos").select();
-        setNotes(data);
+        setTodos(data);
     }
 
     return (
@@ -28,6 +28,7 @@ export default function CommonContainer() {
                 {todos?.map(v => {
                     return <PublicTodo key={v.id} {...v} />
                 })}
+                 
             </div>
         </div>
     )
