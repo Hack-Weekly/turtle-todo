@@ -7,17 +7,17 @@ import { Database } from "@/lib/db.types";
 import Categories from "./Categories";
 import PublicTodo from "@/components/Todos/PublicTodo";
 
-type NoteType = Database["public"]["Tables"]["notes"]["Row"]
+type TodoType = Database["public"]["Tables"]["todos"]["Row"]
 
 export default function CommonContainer() {
-    const [notes, setNotes] = useState<NoteType[] | null>([]);
+    const [todos, setNotes] = useState<TodoType[] | null>([]);
 
     useEffect(() => {
         getTodos();
     }, []);
 
     async function getTodos() {
-        const { data } = await supabase_client.from("notes").select();
+        const { data } = await supabase_client.from("todos").select();
         setNotes(data);
     }
 
@@ -25,7 +25,7 @@ export default function CommonContainer() {
         <div>
             <Categories />
             <div className="flex flex-wrap">
-                {notes?.map(v => {
+                {todos?.map(v => {
                     return <PublicTodo key={v.id} {...v} />
                 })}
             </div>
