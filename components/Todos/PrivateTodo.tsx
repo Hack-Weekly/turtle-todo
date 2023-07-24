@@ -20,7 +20,7 @@ const PrivateTodo = (props: Props) => {
   return (
     <Card className="bg-[#151515] border-0 text-white">
       <CardHeader>
-        <CardTitle className="text-purple-600">{props.title}</CardTitle>
+        <CardTitle className="text-[#994BFF]">{props.title}</CardTitle>
       </CardHeader>
       <CardContent>
         {props.checklist?.map((item, idx) => (
