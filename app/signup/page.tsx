@@ -3,11 +3,17 @@
 import Link from "next/link";
 import { ChangeEvent, useState } from "react";
 import Logo_Big from "@/components/Logo/Logo_Big";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useRouter } from "next/navigation";
+import { Database } from "@/lib/db.types";
+
 
 function SignUp() {
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
+
+  const router = useRouter()
 
   const handleUserNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUserName(e.target.value);
@@ -20,6 +26,17 @@ function SignUp() {
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUserPassword(e.target.value);
   };
+
+  const handleSignUp = async()=>{
+    await createClientComponentClient().auth.signUp({
+      email: userEmail,
+      password: userPassword,
+      options:{
+        emailRedirectTo: `${location.origin}/auth/callback`,
+      },
+    })
+    console.log('done');
+  }
 
   return (
     <section className="h-screen">
@@ -87,6 +104,7 @@ function SignUp() {
                 className="inline-block w-full rounded bg-[#994BFF] px-7 pb-2.5 pt-3 text-sm font-medium 
                  leading-normal text-white  "
                 data-te-ripple-color="light"
+                onClick={handleSignUp}
               >
                 Create an Account
               </button>
