@@ -3,10 +3,14 @@
 import Link from "next/link";
 import { ChangeEvent, useState } from "react";
 import Logo_Big from "@/components/Logo/Logo_Big";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useRouter } from "next/navigation";
+import { Database } from "@/lib/db.types";
 
 function Login() {
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
+  const router = useRouter()
 
   const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUserEmail(e.target.value);
@@ -15,6 +19,14 @@ function Login() {
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUserPassword(e.target.value);
   };
+
+  const handleSignIn = async() =>{
+    await createClientComponentClient<Database>().auth.signInWithPassword({
+      userEmail,
+      userPassword,
+    })
+    router.replace('http://localhost:3000')
+  }
 
   return (
     <section className="h-screen">
@@ -76,6 +88,7 @@ function Login() {
                 className="inline-block w-full rounded bg-[#994BFF] px-7 pb-2.5 pt-3 text-sm font-medium 
                  leading-normal text-white  "
                 data-te-ripple-color="light"
+                onClick={handleSignIn}
               >
                 Log in
               </button>
