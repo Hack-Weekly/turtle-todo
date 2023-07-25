@@ -10,7 +10,7 @@ import { Textarea } from "../__shadcn/textarea";
 import { DatePicker } from "../__shadcn/date-picker";
 import { Combobox } from "../__shadcn/combo-box";
 import { Button } from "../__shadcn/button";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 type PublicTodoType = {
   id: string;
   title: string;
@@ -29,7 +29,7 @@ export default function PublicTodo(props: PublicTodoType) {
   const [status, setStatus] = useState("");
   const [startDate, setStartDate] = useState<Date | undefined>();
   const [dueDate, setDueDate] = useState<Date | undefined>();
-  const router=useRouter()
+
   const STATUS = [
     {
       value: "todo",
@@ -84,7 +84,7 @@ export default function PublicTodo(props: PublicTodoType) {
     }
 
     toast.success("Todo successfully updated 🎉");
-    router.refresh()
+    window.location.reload();
     
   };
   return (
