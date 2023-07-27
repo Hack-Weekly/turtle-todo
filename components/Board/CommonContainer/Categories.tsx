@@ -20,9 +20,9 @@ export default function Categories({ category }: { category: string }) {
   }
 
   return (
-    <div className="mt-5">
-      {category}
-      <div className="flex flex-wrap">
+    <div className="border-gray-800 border-r-2 mr-10">
+      <p className="w-full text-left mb-4 opacity-50">{category}</p>
+      <div className="flex flex-col justify-left pr-10">
         {todos?.map((v) => {
           return <PublicTodo key={v.id} {...v} />;
         })}

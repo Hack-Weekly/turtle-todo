@@ -1,5 +1,4 @@
 import Link from 'next/link'
-// import PriorityContainer from './PriorityContainer/PriorityContainer'
 import CommonContainer from './CommonContainer/CommonContainer'
 
 export default function Board() {
@@ -13,7 +12,6 @@ export default function Board() {
                     Create new Note
                 </Link>
             </div>
-            {/* <PriorityContainer /> */}
             <CommonContainer />
         </section>
     )

@@ -85,11 +85,11 @@ export default function PublicTodo(props: PublicTodoType) {
 
     toast.success("Todo successfully updated 🎉");
     window.location.reload();
-    
+
   };
   return (
     <Popover>
-      <div className="flex flex-col bg-black w-[15rem] h-[10rem] rounded-md ml-0 m-4 my-2 p-3 border-transparent border-2 cursor-grab hover:border-[#404040] hover:border-2">
+      <div className="flex flex-col bg-black w-[15rem] h-[10rem] mb-6 p-4 rounded-md border-transparent border-2 cursor-grab hover:border-[#404040] hover:border-2">
         <PopoverTrigger className="text-[#994BFF] text-lg w-fit">
           {props.title}
         </PopoverTrigger>
