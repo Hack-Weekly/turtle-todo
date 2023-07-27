@@ -1,38 +1,32 @@
 "use client";
 
-import { categoryFilters } from "@/types/common.types";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { supabase_client } from "@/db/supabase";
+import { Database } from "@/lib/db.types";
+import PublicTodo from "@/components/Todos/PublicTodo";
 
-const Categories = () => {
-  const router = useRouter();
-  const pathName = usePathname();
+type TodoType = Database["public"]["Tables"]["todos"]["Row"];
 
-  const searchParams = useSearchParams();
-  const category = searchParams.get("category");
+export default function Categories({ category }: { category: string }) {
+  const [todos, setTodos] = useState<TodoType[] | null>([]);
 
-  const handleTags = (item: string) => {
-    router.push(`${pathName}?category=${item}`);
-  };
+  useEffect(() => {
+    getTodos();
+  }, []);
+
+  async function getTodos() {
+    const { data } = await supabase_client.from("todos").select();
+    setTodos(data);
+  }
 
   return (
-    <div className="flexBetween w-full gap-5 flex-wrap">
-      <ul className="flex gap-2 overflow-auto">
-        {categoryFilters.map((filter) => (
-          <button
-            key={filter}
-            type="button"
-            onClick={() => handleTags(filter)}
-            className={`${category === filter
-              ? "opacity-100 font-medium"
-              : "opacity-30 font-normal"
-              } pr-4 mt-6 mb-2 text-lg`}
-          >
-            {filter}
-          </button>
-        ))}
-      </ul>
+    <div className="mt-5">
+      {category}
+      <div className="flex flex-wrap">
+        {todos?.map((v) => {
+          return <PublicTodo key={v.id} {...v} />;
+        })}
+      </div>
     </div>
   );
-};
-
-export default Categories;
+}
