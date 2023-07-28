@@ -71,8 +71,7 @@ export default function CreateNoteForm() {
 			start_date: startDate!.toUTCString(),
 			due_date: dueDate!.toUTCString(),
 			created_at: new Date().toUTCString(),
-			order: maxOrder + 1,
-			last_reordered: new Date().getTime(),
+			order: maxOrder + 1024,
 		});
 
 		if (error) {
