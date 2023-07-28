@@ -6,14 +6,15 @@ import Logo_Big from "@/components/Logo/Logo_Big";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
 import { Database } from "@/lib/db.types";
-
+import { supabase } from "../../api";
+import { toast } from "react-hot-toast";
 
 function SignUp() {
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
 
-  const router = useRouter()
+  const router = useRouter();
 
   const handleUserNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUserName(e.target.value);
@@ -27,16 +28,37 @@ function SignUp() {
     setUserPassword(e.target.value);
   };
 
-  const handleSignUp = async()=>{
-    await createClientComponentClient().auth.signUp({
+  const handleSignUp = async () => {
+    const email = userEmail;
+    const password = userPassword;
+
+    // await createClientComponentClient().auth.signUp({
+    //   email,
+    //   password,
+    //   options: {
+    //     emailRedirectTo: `${location.origin}/auth/callback`,
+    //   },
+    // });
+    // router.refresh();
+    // console.log("done");
+
+    const { data, error } = await supabase.auth.signUp({
       email: userEmail,
       password: userPassword,
-      options:{
-        emailRedirectTo: `${location.origin}/auth/callback`,
+      options: {
+        data: {
+          first_name: userName,
+        },
       },
-    })
-    console.log('done');
-  }
+    });
+
+    if (data.session) {
+      router.push("/login");
+    } else {
+      console.log(error);
+      toast.error("something went wrong | check details | try again");
+    }
+  };
 
   return (
     <section className="h-screen">
