@@ -30,7 +30,7 @@ export default function CommonContainer() {
 					initialData.columns[category.dbValue] = {
 						id: category.dbValue,
 						title: category.name,
-						taskIds: data
+						todoIds: data
 							?.filter(todo => todo.status === category.dbValue)
 							.map(todo => todo.id),
 					};
@@ -43,15 +43,48 @@ export default function CommonContainer() {
 			});
 	}, []);
 
-	const onDragEndHandler: OnDragEndResponder = result => {};
+	const onDragEndHandler: OnDragEndResponder = result => {
+		const { destination, source, draggableId } = result;
+
+		if (!destination) {
+			return;
+		}
+
+		if (
+			destination.droppableId === source.droppableId &&
+			destination.index === source.index
+		) {
+			return;
+		}
+
+		const column = data.columns[source.droppableId];
+		const newTodoIds = Array.from(column.todoIds);
+		newTodoIds.splice(source.index, 1);
+		newTodoIds.splice(destination.index, 0, draggableId);
+
+		const newColumn = {
+			...column,
+			todoIds: newTodoIds,
+		};
+
+		setData((oldState: any) => {
+			return {
+				...oldState,
+				columns: {
+					...oldState.columns,
+					[newColumn.id]: newColumn,
+				},
+			};
+		});
+	};
 
 	return (
 		<div className="grid grid-cols-3 mt-10">
 			<DragDropContext onDragEnd={onDragEndHandler}>
 				<Category
 					name="Todo"
-          id="todo"
-					todos={data?.columns['todo'].taskIds.map(
+					id="todo"
+					todos={data?.columns['todo'].todoIds.map(
 						(taskId: string) => data.tasks[taskId]
 					)}
 				/>
