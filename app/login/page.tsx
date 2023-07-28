@@ -1,16 +1,19 @@
 "use client";
 
-import Link from "next/link";
-import { ChangeEvent, useState } from "react";
+import { supabase } from "../../api";
+
 import Logo_Big from "@/components/Logo/Logo_Big";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Database } from "@/lib/db.types";
+
+import { ChangeEvent, FormEvent, useState } from "react";
+import { toast } from "react-hot-toast";
 
 function Login() {
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
-  const router = useRouter()
+  const router = useRouter();
 
   const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUserEmail(e.target.value);
@@ -20,13 +23,19 @@ function Login() {
     setUserPassword(e.target.value);
   };
 
-  const handleSignIn = async() =>{
-    await createClientComponentClient<Database>().auth.signInWithPassword({
-      userEmail,
-      userPassword,
-    })
-    router.replace('http://localhost:3000')
-  }
+  const handleSignIn = async (e: FormEvent) => {
+    // e.preventDefault();
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: userEmail,
+      password: userPassword,
+    });
+
+    if (data.session) {
+      router.push("/");
+    } else {
+      toast.error("account does not exist");
+    }
+  };
 
   return (
     <section className="h-screen">
@@ -41,20 +50,13 @@ function Login() {
               <p className="text-4xl">Welcome Back!</p>
               <p className="text-lg">Start managing your tasks</p>
             </div>
-            <form
-              className="flex flex-col gap-4 "
-              // this function stop form default behavior
-              onSubmit={(e) => {
-                e.preventDefault();
-              }}
-            >
+            <form className="flex flex-col gap-4 ">
               <div className="relative ">
                 <input
                   type="email"
                   className="peer block min-h-[auto] w-full rounded border-0 bg-[#151515] px-3 py-[0.32rem] leading-[2.15] outline-none placeholder-white "
                   id="exampleFormControlInput3"
                   placeholder="Email address"
-                  // onChange={(e) => setUserEmail(e.target.value)}
                   onChange={handleEmailChange}
                 />
                 <label
