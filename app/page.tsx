@@ -1,9 +1,9 @@
 "use client";
 
+import { supabase_client } from "@/db/supabase";
 import Navbar from "../components/Navbar/Navbar";
 import Sidebar from "./../components/Sidebar/Sidebar";
 import Board from "@/components/Board/Board";
-import { supabase } from "../api";
 import { useEffect } from "react";
 
 export default function Page() {
@@ -13,7 +13,7 @@ export default function Page() {
     // } = await supabase.auth.getUser();
     // const user = await supabase.auth.getSession();
 
-    const { data, error } = await supabase.auth.getSession();
+    const { data, error } = await supabase_client.auth.getSession();
 
     console.log(data);
     if (data.session) {
@@ -29,7 +29,7 @@ export default function Page() {
   return (
     <section className="flex">
       <Navbar />
-      <Sidebar />
+      {/* <Sidebar /> */}
       <Board />
       {/* <button onClick={getUserData}>push me </button> */}
     </section>
