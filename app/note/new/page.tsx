@@ -6,7 +6,7 @@ export default function page() {
 	return (
 		<section className="flex">
 			<Navbar />
-			<Sidebar />
+			{/* <Sidebar /> */}
 			<CreateNoteForm />
 		</section>
 	);
