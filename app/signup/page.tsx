@@ -1,14 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
-import logoImg from "@/public/logo.svg";
 import { ChangeEvent, useState } from "react";
+import Logo_Big from "@/components/Logo/Logo_Big";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useRouter } from "next/navigation";
+import { Database } from "@/lib/db.types";
+import { supabase } from "../../api";
+import { toast } from "react-hot-toast";
 
-function SingUp() {
+function SignUp() {
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
+
+  const router = useRouter();
 
   const handleUserNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUserName(e.target.value);
@@ -22,20 +28,44 @@ function SingUp() {
     setUserPassword(e.target.value);
   };
 
+  const handleSignUp = async () => {
+    const email = userEmail;
+    const password = userPassword;
+
+    // await createClientComponentClient().auth.signUp({
+    //   email,
+    //   password,
+    //   options: {
+    //     emailRedirectTo: `${location.origin}/auth/callback`,
+    //   },
+    // });
+    // router.refresh();
+    // console.log("done");
+
+    const { data, error } = await supabase.auth.signUp({
+      email: userEmail,
+      password: userPassword,
+      options: {
+        data: {
+          first_name: userName,
+        },
+      },
+    });
+
+    if (data.session) {
+      router.push("/login");
+    } else {
+      console.log(error);
+      toast.error("something went wrong | check details | try again");
+    }
+  };
+
   return (
     <section className="h-screen">
       <div className="container h-full px-6 py-24">
         <div className="flex h-full flex-wrap items-center justify-center lg:justify-between">
           {/* <!-- Left column container with background--> */}
-          <div className="mb-12 md:mb-0 md:w-8/12 lg:w-6/12">
-            <Image
-              src={logoImg}
-              width={100}
-              height={100}
-              className="w-full"
-              alt="some image"
-            />
-          </div>
+          <Logo_Big />
 
           {/* <!-- Right column container with form --> */}
           <div className="md:w-8/12 lg:ml-6 lg:w-5/12 bg-black p-16 h-fit rounded-2xl ">
@@ -96,6 +126,7 @@ function SingUp() {
                 className="inline-block w-full rounded bg-[#994BFF] px-7 pb-2.5 pt-3 text-sm font-medium 
                  leading-normal text-white  "
                 data-te-ripple-color="light"
+                onClick={handleSignUp}
               >
                 Create an Account
               </button>
@@ -143,4 +174,4 @@ function SingUp() {
   );
 }
 
-export default SingUp;
+export default SignUp;

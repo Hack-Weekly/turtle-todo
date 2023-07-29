@@ -1,13 +1,19 @@
 "use client";
 
+import { supabase } from "../../api";
+
+import Logo_Big from "@/components/Logo/Logo_Big";
+
 import Link from "next/link";
-import Image from "next/image";
-import logoImg from "@/public/logo.svg";
-import { ChangeEvent, useState } from "react";
+import { useRouter } from "next/navigation";
+
+import { ChangeEvent, FormEvent, useState } from "react";
+import { toast } from "react-hot-toast";
 
 function Login() {
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
+  const router = useRouter();
 
   const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUserEmail(e.target.value);
@@ -17,20 +23,26 @@ function Login() {
     setUserPassword(e.target.value);
   };
 
+  const handleSignIn = async (e: FormEvent) => {
+    // e.preventDefault();
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: userEmail,
+      password: userPassword,
+    });
+
+    if (data.session) {
+      router.push("/");
+    } else {
+      toast.error("account does not exist");
+    }
+  };
+
   return (
     <section className="h-screen">
-      <div className="container h-full px-6 py-24">
+      <div className="container h-full px-6 py-10">
         <div className="flex h-full flex-wrap items-center justify-center lg:justify-between">
           {/* <!-- Left column container with background--> */}
-          <div className="mb-12 md:mb-0 md:w-8/12 lg:w-6/12">
-            <Image
-              src={logoImg}
-              width={100}
-              height={100}
-              className="w-full"
-              alt="some image"
-            />
-          </div>
+          <Logo_Big />
 
           {/* <!-- Right column container with form --> */}
           <div className="md:w-8/12 lg:ml-6 lg:w-5/12 bg-black p-16 h-fit rounded-2xl">
@@ -38,20 +50,13 @@ function Login() {
               <p className="text-4xl">Welcome Back!</p>
               <p className="text-lg">Start managing your tasks</p>
             </div>
-            <form
-              className="flex flex-col gap-4 "
-              // this function stop form default behavior
-              onSubmit={(e) => {
-                e.preventDefault();
-              }}
-            >
+            <form className="flex flex-col gap-4 ">
               <div className="relative ">
                 <input
                   type="email"
                   className="peer block min-h-[auto] w-full rounded border-0 bg-[#151515] px-3 py-[0.32rem] leading-[2.15] outline-none placeholder-white "
                   id="exampleFormControlInput3"
                   placeholder="Email address"
-                  // onChange={(e) => setUserEmail(e.target.value)}
                   onChange={handleEmailChange}
                 />
                 <label
@@ -85,6 +90,7 @@ function Login() {
                 className="inline-block w-full rounded bg-[#994BFF] px-7 pb-2.5 pt-3 text-sm font-medium 
                  leading-normal text-white  "
                 data-te-ripple-color="light"
+                onClick={handleSignIn}
               >
                 Log in
               </button>
