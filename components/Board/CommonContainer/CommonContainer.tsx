@@ -8,7 +8,7 @@ import { DragDropContext, OnDragEndResponder } from 'react-beautiful-dnd';
 const categories = [
 	{ dbValue: 'todo', name: 'Todo' },
 	{ dbValue: 'inprogress', name: 'In Progress' },
-	{ dbValue: 'completed', name: 'Completed' },
+	{ dbValue: 'done', name: 'Done' },
 ];
 
 export default function CommonContainer() {
@@ -20,7 +20,7 @@ export default function CommonContainer() {
 			.select()
 			.then(({ data }) => {
 				const initialData: any = {
-					tasks: {},
+					todos: {},
 					columns: {},
 					columnOrder: categories.map(category => category.dbValue),
 				};
@@ -45,7 +45,7 @@ export default function CommonContainer() {
 				});
 
 				data?.forEach(todo => {
-					initialData.tasks[todo.id] = todo;
+					initialData.todos[todo.id] = todo;
 				});
 
 				setData(initialData);
@@ -75,46 +75,46 @@ export default function CommonContainer() {
 			newOrder = 1024;
 		} else if (destination.index === 0) {
 			// Start of list
-			newOrder = Math.floor(data.tasks[destTodoIds[0]].order / 2); // Half of the to-be second todo order
-			if (data.tasks[destTodoIds[0]].order === 1) overlapped = true;
+			newOrder = Math.floor(data.todos[destTodoIds[0]].order / 2); // Half of the to-be second todo order
+			if (data.todos[destTodoIds[0]].order === 1) overlapped = true;
 		} else if (destination.index === destTodoIds.length) {
 			// End of list
-			newOrder = data.tasks[destTodoIds[destTodoIds.length - 1]].order + 1024; // 1024 more than the to-be one before last todo order
+			newOrder = data.todos[destTodoIds[destTodoIds.length - 1]].order + 1024; // 1024 more than the to-be one before last todo order
 		} else {
 			if (source.droppableId === destination.droppableId) {
 				if (source.index < destination.index) {
 					newOrder = Math.floor(
-						(data.tasks[destTodoIds[destination.index + 1]].order +
-							data.tasks[destTodoIds[destination.index]].order) /
+						(data.todos[destTodoIds[destination.index + 1]].order +
+							data.todos[destTodoIds[destination.index]].order) /
 							2
 					); // Half of the todos' order wrapping the moving todo
 
 					if (
 						Math.abs(
-							newOrder - data.tasks[destTodoIds[destination.index + 1]].order
+							newOrder - data.todos[destTodoIds[destination.index + 1]].order
 						) <= 1
 					)
 						overlapped = true;
 				} else if (source.index > destination.index) {
 					newOrder = Math.floor(
-						(data.tasks[destTodoIds[destination.index]].order +
-							data.tasks[destTodoIds[destination.index - 1]].order) /
+						(data.todos[destTodoIds[destination.index]].order +
+							data.todos[destTodoIds[destination.index - 1]].order) /
 							2
 					); // Half of the todos' order wrapping the moving todo
 				}
 			} else {
 				newOrder = Math.floor(
-					(data.tasks[destTodoIds[destination.index]].order +
-						data.tasks[destTodoIds[destination.index - 1]].order) /
+					(data.todos[destTodoIds[destination.index]].order +
+						data.todos[destTodoIds[destination.index - 1]].order) /
 						2
 				); // Half of the todos' order wrapping the moving todo
 			}
 
 			if (
-				Math.abs(newOrder - data.tasks[destTodoIds[destination.index]].order) <=
+				Math.abs(newOrder - data.todos[destTodoIds[destination.index]].order) <=
 					1 ||
 				Math.abs(
-					newOrder - data.tasks[destTodoIds[destination.index - 1]].order
+					newOrder - data.todos[destTodoIds[destination.index - 1]].order
 				) <= 1
 			)
 				overlapped = true;
@@ -134,22 +134,22 @@ export default function CommonContainer() {
 			};
 
 			setData((oldState: any) => {
-				let tasks: any = oldState.tasks;
+				let todos: any = oldState.todos;
 				if (overlapped) {
 					let multiplier = 0;
 					newTodoIds.forEach((todoId: any) => {
 						multiplier++;
-						tasks[todoId] = { ...data.tasks[todoId], order: multiplier * 1024 };
+						todos[todoId] = { ...data.todos[todoId], order: multiplier * 1024 };
 					});
 				} else {
-					tasks = {
-						...oldState.tasks,
-						[draggableId]: { ...oldState.tasks[draggableId], order: newOrder },
+					todos = {
+						...oldState.todos,
+						[draggableId]: { ...oldState.todos[draggableId], order: newOrder },
 					};
 				}
 
 				return {
-					tasks,
+					todos,
 					columns: {
 						...oldState.columns,
 						[newColumn.id]: newColumn,
@@ -166,7 +166,7 @@ export default function CommonContainer() {
 						newTodoIds.map((todoId: any) => {
 							multiplier++;
 							return {
-								...data.tasks[todoId],
+								...data.todos[todoId],
 								order: multiplier * 1024,
 							};
 						})
@@ -201,26 +201,26 @@ export default function CommonContainer() {
 			};
 
 			setData((oldState: any) => {
-				let tasks: any = oldState.tasks;
+				let todos: any = oldState.todos;
 				if (overlapped) {
 					let multiplier = 0;
 					destTodoIds.forEach((todoId: any) => {
 						multiplier++;
-						tasks[todoId] = {
-							...data.tasks[todoId],
+						todos[todoId] = {
+							...data.todos[todoId],
 							order: multiplier * 1024,
 							status: destination.droppableId,
 						};
 					});
 				} else {
-					tasks = {
-						...oldState.tasks,
-						[draggableId]: { ...oldState.tasks[draggableId], order: newOrder },
+					todos = {
+						...oldState.todos,
+						[draggableId]: { ...oldState.todos[draggableId], order: newOrder },
 					};
 				}
 
 				return {
-					tasks,
+					todos,
 					columns: {
 						...oldState.columns,
 						[newSrcColumn.id]: newSrcColumn,
@@ -238,7 +238,7 @@ export default function CommonContainer() {
 						destTodoIds.map((todoId: any) => {
 							multiplier++;
 							return {
-								...data.tasks[todoId],
+								...data.todos[todoId],
 								order: multiplier * 1024,
 							};
 						})
@@ -269,7 +269,7 @@ export default function CommonContainer() {
 						name={category.name}
 						id={category.dbValue}
 						todos={data?.columns[category.dbValue].todoIds.map(
-							(taskId: string) => data.tasks[taskId]
+							(taskId: string) => data.todos[taskId]
 						)}
 					/>
 				))}
