@@ -3,13 +3,14 @@
 import { Input } from '@/components/__shadcn/input';
 import { Button } from '../../__shadcn/button';
 import { Card, CardContent } from '../../__shadcn/card';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { Textarea } from '@/components/__shadcn/textarea';
 import { Combobox } from '@/components/__shadcn/combo-box';
 import { DatePicker } from '@/components/__shadcn/date-picker';
 import { supabase_client } from '@/db/supabase';
 import { v4 as uuidv4 } from 'uuid';
 import { toast } from 'react-hot-toast';
+import { supabase } from '@/api';
 
 const STATUS = [
 	{
@@ -50,8 +51,19 @@ export default function CreateNoteForm() {
 	const [description, setDescription] = useState('');
 	const [priority, setPriority] = useState('');
 	const [status, setStatus] = useState('');
+	const [userId, setUserId] = useState<string|undefined>()
 	const [startDate, setStartDate] = useState<Date | undefined>();
 	const [dueDate, setDueDate] = useState<Date | undefined>();
+
+	useEffect(()=>{
+		const getUserId = async()=>{
+			// session.user.id
+			const { data, error } = await supabase.auth.getSession();
+			// if()
+			setUserId(data.session?.user.id)
+		}
+		getUserId()
+	},[])
 
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
@@ -67,7 +79,7 @@ export default function CreateNoteForm() {
 			description,
 			priority,
 			status,
-			owner_id: '',
+			owner_id: userId as string,
 			start_date: startDate!.toUTCString(),
 			due_date: dueDate!.toUTCString(),
 			created_at: new Date().toUTCString(),
