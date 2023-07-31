@@ -6,8 +6,8 @@ import Logo_Big from "@/components/Logo/Logo_Big";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
 import { Database } from "@/lib/db.types";
-import { supabase } from "../../api";
 import { toast } from "react-hot-toast";
+import { supabase_client } from "@/db/supabase";
 
 function SignUp() {
   const [userName, setUserName] = useState("");
@@ -42,7 +42,7 @@ function SignUp() {
     // router.refresh();
     // console.log("done");
 
-    const { data, error } = await supabase.auth.signUp({
+    const { data, error } = await supabase_client.auth.signUp({
       email: userEmail,
       password: userPassword,
       options: {

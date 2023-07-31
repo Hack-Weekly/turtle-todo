@@ -3,13 +3,14 @@
 import { Input } from '@/components/__shadcn/input';
 import { Button } from '../../__shadcn/button';
 import { Card, CardContent } from '../../__shadcn/card';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { Textarea } from '@/components/__shadcn/textarea';
 import { Combobox } from '@/components/__shadcn/combo-box';
 import { DatePicker } from '@/components/__shadcn/date-picker';
 import { supabase_client } from '@/db/supabase';
 import { v4 as uuidv4 } from 'uuid';
 import { toast } from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 const STATUS = [
 	{
@@ -52,6 +53,21 @@ export default function CreateNoteForm() {
 	const [status, setStatus] = useState('');
 	const [startDate, setStartDate] = useState<Date | undefined>();
 	const [dueDate, setDueDate] = useState<Date | undefined>();
+	const [userId, setUserId] = useState("");
+	const router = useRouter();
+
+	useEffect(() => {
+		const fetchUser = async () => {
+			const { data, error } = await supabase_client.auth.getUser();
+
+			if(data.user === null)	
+				return;
+
+			setUserId(data.user.id);
+		}
+		fetchUser();
+	}, [])
+
 
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
@@ -60,14 +76,15 @@ export default function CreateNoteForm() {
 			.select()
 			.eq('status', status);
 		let maxOrder = 0;
-		if (todos) maxOrder = Math.max(...todos.map(todo => todo.order));
+		
+		if (todos && todos.length > 0) maxOrder = Math.max(...todos.map(todo => todo.order));
 		const { error, data } = await supabase_client.from('todos').insert({
 			id: uuidv4(),
 			title,
 			description,
 			priority,
 			status,
-			owner_id: '',
+			owner_id: userId, 
 			start_date: startDate!.toUTCString(),
 			due_date: dueDate!.toUTCString(),
 			created_at: new Date().toUTCString(),
@@ -80,6 +97,7 @@ export default function CreateNoteForm() {
 		}
 
 		toast.success('Todo successfully added 🎉');
+		router.push('/');
 	};
 
 	return (
