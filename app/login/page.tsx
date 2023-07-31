@@ -1,8 +1,7 @@
 "use client";
 
-import { supabase } from "../../api";
-
 import Logo_Big from "@/components/Logo/Logo_Big";
+import { supabase_client } from "@/db/supabase";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -25,7 +24,7 @@ function Login() {
 
   const handleSignIn = async (e: FormEvent) => {
     // e.preventDefault();
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase_client.auth.signInWithPassword({
       email: userEmail,
       password: userPassword,
     });

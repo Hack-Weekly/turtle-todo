@@ -1,5 +1,6 @@
 "use client";
 
+import { supabase_client } from "@/db/supabase";
 import Navbar from "../components/Navbar/Navbar";
 import Sidebar from "./../components/Sidebar/Sidebar";
 import Board from "@/components/Board/Board";
@@ -7,7 +8,7 @@ import { supabase } from "../api";
 import { useEffect, useState } from "react";
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
-
+import { useEffect } from "react";
 
 export default function Page() {
   // const getUserData = async () => {
@@ -15,6 +16,7 @@ export default function Page() {
     //   data: { user },
     // } = await supabase.auth.getUser();
     // const user = await supabase.auth.getSession();
+
 
   //   const { data, error } = await supabase.auth.getSession();
 
@@ -43,6 +45,8 @@ export default function Page() {
     router.replace('/login')
   }
 
+    const { data, error } = await supabase_client.auth.getSession();
+
 
 
   return (
@@ -51,6 +55,9 @@ export default function Page() {
       (<section className="flex">
       <Navbar user={user}/>
       <Sidebar />
+    <section className="flex">
+      <Navbar />
+      {/* <Sidebar /> */}
       <Board />
       {/* <button onClick={getUserData}>push me </button> */}
     </section>):null}

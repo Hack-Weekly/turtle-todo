@@ -11,6 +11,8 @@ import { supabase_client } from '@/db/supabase';
 import { v4 as uuidv4 } from 'uuid';
 import { toast } from 'react-hot-toast';
 import { supabase } from '@/api';
+import { useRouter } from 'next/navigation';
+
 
 const STATUS = [
 	{
@@ -54,6 +56,21 @@ export default function CreateNoteForm() {
 	const [userId, setUserId] = useState<string|undefined>()
 	const [startDate, setStartDate] = useState<Date | undefined>();
 	const [dueDate, setDueDate] = useState<Date | undefined>();
+	const [userId, setUserId] = useState("");
+	const router = useRouter();
+
+	useEffect(() => {
+		const fetchUser = async () => {
+			const { data, error } = await supabase_client.auth.getUser();
+
+			if(data.user === null)	
+				return;
+
+			setUserId(data.user.id);
+		}
+		fetchUser();
+	}, [])
+
 
 	useEffect(()=>{
 		const getUserId = async()=>{
@@ -72,7 +89,8 @@ export default function CreateNoteForm() {
 			.select()
 			.eq('status', status);
 		let maxOrder = 0;
-		if (todos) maxOrder = Math.max(...todos.map(todo => todo.order));
+		
+		if (todos && todos.length > 0) maxOrder = Math.max(...todos.map(todo => todo.order));
 		const { error, data } = await supabase_client.from('todos').insert({
 			id: uuidv4(),
 			title,
@@ -80,6 +98,7 @@ export default function CreateNoteForm() {
 			priority,
 			status,
 			owner_id: userId as string,
+			owner_id: userId, 
 			start_date: startDate!.toUTCString(),
 			due_date: dueDate!.toUTCString(),
 			created_at: new Date().toUTCString(),
@@ -92,6 +111,7 @@ export default function CreateNoteForm() {
 		}
 
 		toast.success('Todo successfully added 🎉');
+		router.push('/');
 	};
 
 	return (
